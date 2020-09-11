@@ -1,83 +1,88 @@
 import React, {Component} from 'react';
-import './App.css';
-import Alert from './Components/Alert';
 
-class bmi extends Component {
+class Cicilan extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+    nominal: '',
+    bunga: '',
+    periode: '12',
+    hasil: 'Cicilan per bulan:'
+  };
 
-	constructor(props){
-		super(props);
-		this.state = {
-			berat: '58',
-			tinggi: '1.60',
-			hasil: "Anda Ideal",
-			pesan: ""
-		};
+  this.nominalChange = this.nominalChange.bind(this);
+  this.bungaChange = this.bungaChange.bind(this);
+  this.periodeChange = this.periodeChange.bind(this);
+  }
 
-		this.BeratChange = this.BeratChange.bind(this);
-		this.TinggiChange = this.TinggiChange.bind(this);
-		this.hitungBmi = this.hitungBmi.bind(this);
-	}
+  nominalChange(event){
+    this.setState({nominal: event.target.value})
+  }
 
-	BeratChange(event) {
-		this.setState({berat: event.target.value})
-	}
+  bungaChange(event){
+    this.setState({bunga: event.target.value})
+  }
 
-	TinggiChange(event){
-		this.setState({tinggi: event.target.value})
-	}
-	
-	hitungBmi = (event) => {
-		let tinggi = this.state.tinggi;
-		let berat = this.state.berat;
+  periodeChange(event){
+    this.setState({periode: event.target.value})
+  }
 
-		// hitung
-		let hasil = berat / (tinggi*tinggi);
+  hitung = (event)  => {
+    let nominal = this.state.nominal;
+    let bunga = this.state.bunga;
+    let periode = this.state.periode;
 
-		// seleksi
-		if(hasil <= 18.5){
-			this.setState({hasil: "Anda Kurus"}) 
-		} else if(hasil >= 18.5 && hasil <= 22.9){
-			this.setState({hasil: "Anda Ideal"})
-		} else if(hasil >= 23 && hasil <= 24.9){
-			this.setState({hasil: "Anda Obesitas"})
-		} else{
-			this.setState({hasil: "Anda Tidak Normal"})
-		}
-			
-		event.preventDefault();
-	}
+    let b = bunga / 100;
+    let pbulan = nominal / periode; 
+    let flower = (pbulan / 100) * 10;
+    let hasil = pbulan + flower;
 
-	render(){
-		return(
-			<div className="card col-sm-5 mx-auto m-5">
-				<div className="card-header bg-sendary text-center text-dark">
-					<h4>Body Mass Index</h4>
+    //output
+    this.setState({hasilA: "Cicilan per bulan : Rp. " + hasil})
+
+    event.preventDefault();
+  }
+
+  render(){
+    return(
+      <div className="card col-sm-5 mx-auto m-5">
+				<div className="card-header text-center bg-primary text-white">
+					<h4>Cicilan Bank</h4>
 				</div>
-				<div className="card-body">
-				<div class="input-group mb-2">
-						<div class="input-group-prepend">
-						<label class="input-group-text" >Berat (kg) : </label>
-						</div>
-						<input type="number" className="form-control" value={this.state.berat} onChange={this.BeratChange}/>
-					</div>
-					<div class="input-group mb-2">
-						<div class="input-group-prepend">
-						<label class="input-group-text" >Tinggi (m) : </label>
-						</div>
-						<input type="number" className="form-control" value={this.state.tinggi} onChange={this.TinggiChange}/>
-					</div>
-				</div>
-				<div className="card-footer">
-					<button className="form-control btn btn-info text-white" onClick={this.hitungBmi} >
-						Hitung
-					</button>
-					<h4 className="text-center mt-4">Hasil</h4>
-					{/* Alert */}
-					<Alert hasil={this.state.hasil} pesan={this.state.pesan}/>
-				</div>
+			<div className="card-body">
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <label class="input-group-text" >Nominal : </label>
+          </div>
+          <input type="number" className="form-control" onChange={this.nominalChange}/>
+        </div>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <label class="input-group-text" >Bunga (%) : </label>
+          </div>
+          <input type="number" className="form-control" onChange={this.bungaChange}/>
+        </div>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <label class="input-group-text" >Periode : </label>
+          </div>
+          <select class="custom-select" value={this.state.periode} onChange={this.periodeChange}>
+            <option value="12">12</option>
+            <option value="24">24</option>
+            <option value="36">36</option>
+          </select>
+        </div>
 			</div>
-		);
-	}
+			<div className="card-footer">
+			  <button className="form-control btn btn-primary text-white" onClick={this.hitung}>
+					Hitung
+				</button>
+				<h4 className="text-center mt-4">Hasil</h4>
+        <input className="form-control mb-1" value={this.state.hasilA} readOnly/>
+			</div>
+		</div>
+    );
+  }
 }
 
-export default bmi;
+export default Cicilan;
